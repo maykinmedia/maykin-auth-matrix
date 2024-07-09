@@ -18,13 +18,13 @@ jobs:
         python: ['3.10', '3.11', '3.12']
         django: ['4.2']
 
-    name: Run the test suite (Python ${{ matrix.python }}, Django ${{ matrix.django }},)
+    name: Run the test suite (Python $, Django $)
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python }},
+          python-version: $
 
       - name: Install dependencies
         run: pip install tox tox-gh-actions
@@ -32,8 +32,8 @@ jobs:
       - name: Run tests
         run: tox
         env:
-          PYTHON_VERSION: ${{ matrix.python }},
-          DJANGO: ${{ matrix.django }},
+          PYTHON_VERSION: $
+          DJANGO: $
 
       - name: Publish coverage report
         uses: codecov/codecov-action@v4
