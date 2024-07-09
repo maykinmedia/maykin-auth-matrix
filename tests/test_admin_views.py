@@ -10,7 +10,7 @@ class AuthorizationMatrixViewTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.view = AuthorizationMatrixView.as_view()
-        self.user = User.objects.create_user(
+        self.admin_user = User.objects.create_user(
             username="test",
             password="test",
             is_staff=True,
@@ -20,7 +20,12 @@ class AuthorizationMatrixViewTest(TestCase):
 
     def test_view_requires_admin_permission(self):
         request = self.factory.get(self.url)
-        request.user = self.user
+        request.user = User.objects.create_user(
+            username="test_user",
+            password="test_pass",
+            is_staff=False,
+            is_superuser=False
+        )
 
         response = self.view(request)
 
