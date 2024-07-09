@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 
 User = get_user_model()
 
+
 @method_decorator(staff_member_required, name="dispatch")
 class AuthorizationMatrixView(views.generic.base.TemplateView):
 

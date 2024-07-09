@@ -12,10 +12,7 @@ class AuthorizationMatrixViewTest(TestCase):
         self.factory = RequestFactory()
         self.view = AuthorizationMatrixView.as_view()
         self.admin_user = User.objects.create_user(
-            username="test",
-            password="test",
-            is_staff=True,
-            is_superuser=True
+            username="test", password="test", is_staff=True, is_superuser=True
         )
         self.url = reverse("authorization_matrix")
 
@@ -25,7 +22,7 @@ class AuthorizationMatrixViewTest(TestCase):
             username="test_user",
             password="test_pass",
             is_staff=False,
-            is_superuser=False
+            is_superuser=False,
         )
 
         response = self.view(request)
