@@ -1,7 +1,8 @@
-from django.test import TestCase, RequestFactory
-from django.urls import reverse
-from auth_matrix.admin_views import AuthorizationMatrixView
 from django.contrib.auth import get_user_model
+from django.test import RequestFactory, TestCase
+from django.urls import reverse
+
+from auth_matrix.admin_views import AuthorizationMatrixView
 
 User = get_user_model()
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
-from django.contrib.auth.models import Group, Permission
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group, Permission
 
 from import_export import fields, resources
 from import_export.admin import ExportMixin
