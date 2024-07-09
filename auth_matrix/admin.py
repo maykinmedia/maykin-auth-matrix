@@ -9,13 +9,10 @@ from import_export.admin import ExportMixin
 
 User = get_user_model()
 
-username_attribute = getattr(User, "USERNAME_FIELD", "username")
-email_attribute = getattr(User, "EMAIL_FIELD", "email")
-
 
 class UserGroupResource(resources.ModelResource):
-    username = fields.Field(attribute=username_attribute, column_name="Username")
-    email = fields.Field(attribute=email_attribute, column_name="E-mail")
+    username = fields.Field(attribute="username", column_name="Username")
+    email = fields.Field(attribute="email", column_name="E-mail")
     last_login = fields.Field(attribute="last_login", column_name="Laatst gewijzigd")
     is_active = fields.Field(attribute="is_active", column_name="Actief")
     is_staff = fields.Field(attribute="is_staff", column_name="Admin toegang")
@@ -43,21 +40,14 @@ class UserGroupResource(resources.ModelResource):
         return data
 
     def export(self, queryset, *args, **kwargs):
-        queryset = self.get_queryset()
         dataset = super().export(queryset, *args, **kwargs)
         group_names = [group.name for group in Group.objects.all()]
         for group_name in group_names:
             dataset.append_col(
-                [
-                    user.groups.filter(name=group_name).exists()
-                    for user in User.objects.all()
-                ],
+                [user.groups.filter(name=group_name).exists() for user in queryset],
                 header=group_name,
             )
         return dataset
-
-    def get_queryset(self):
-        return super().get_queryset()
 
 
 # GROUPS

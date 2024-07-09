@@ -27,8 +27,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "django>=4.2",
-    "django-import-export",
+    "django>=4.2"
 ]
 
 [project.urls]
