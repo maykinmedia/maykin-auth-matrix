@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
-from maykin-auth-matrix.admin_views import AuthorizationMatrixView
+from auth_matrix.admin_views import AuthorizationMatrixView
 
 User = get_user_model()
 

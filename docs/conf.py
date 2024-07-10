@@ -14,14 +14,14 @@ import sys
 from pathlib import Path
 
 current_dir = Path(__file__).parents[1]
-code_directory = current_dir / "maykin-auth-matrix"
+code_directory = current_dir / "auth_matrix"
 
 sys.path.insert(0, str(code_directory))
 
 
 # -- Project information -----------------------------------------------------
 
-project = "maykin-auth-matrix"
+project = "auth_matrix"
 copyright = "2024, Maykin Media"
 author = "Maykin Media"
 

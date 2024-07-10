@@ -11,7 +11,7 @@ USE_TZ = True
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "maykin-auth-matrix.db",
+        "NAME": BASE_DIR / "auth_matrix.db",
     }
 }
 
@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.admin",
-    "maykin-auth-matrix",
+    "auth_matrix",
     "testapp",
     "import_export",
 ]

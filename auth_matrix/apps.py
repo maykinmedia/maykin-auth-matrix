@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class AuthMatrixConfig(AppConfig):
-    name = "maykin-auth-matrix"
+    name = "auth_matrix"

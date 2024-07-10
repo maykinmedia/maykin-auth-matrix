@@ -9,7 +9,7 @@ Install from PyPI with pip:
 
 .. code-block:: bash
 
-    pip install maykin-auth-matrix
+    pip install auth_matrix
 
 
 Usage
@@ -21,12 +21,12 @@ Add the URL to your Django project's ``urls.py``:
 
     from django.contrib import admin
     from django.urls import path, include
-    from maykin-auth-matrix.views import AuthMatrixView
+    from auth_matrix.views import AuthMatrixView
 
     urlpatterns = [
         path(
             "admin/authorization/",
-            include("maykin-auth-matrix.admin_urls"),
+            include("auth_matrix.admin_urls"),
         ),
     ]
 
