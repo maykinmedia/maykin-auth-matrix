@@ -9,13 +9,14 @@ Welcome to maykin-auth-matrix's documentation!
 
 |python-versions| |django-versions| |pypi-version|
 
-<One liner describing the project>
+DigiD Compliant Authorization Matrix for the administation of Django projects.
 
 Features
 ========
 
-* ...
-* ...
+* Display a matrix of permissions for the groups
+* Display a matrix of groups for the users
+* Allows to export the matrix in different formats
 
 .. toctree::
    :maxdepth: 2
