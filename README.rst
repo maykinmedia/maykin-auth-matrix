@@ -1,10 +1,10 @@
 
 
-Welcome to auth_matrix's documentation!
+Welcome to maykin-auth-matrix's documentation!
 =================================================
 
 :Version: 0.1.0
-:Source: https://github.com/maykinmedia/auth_matrix
+:Source: https://github.com/maykinmedia/maykin-auth-matrix
 :Keywords: ``<keywords>``
 :PythonVersion: 3.10
 
@@ -39,7 +39,7 @@ Install
 
 .. code-block:: bash
 
-    pip install auth_matrix
+    pip install maykin-auth-matrix
 
 
 Usage
@@ -67,28 +67,28 @@ directory to the python path (or use ``python -m django <command>``):
     # django-admin makemessages -l nl
 
 
-.. |build-status| image:: https://github.com/maykinmedia/auth_matrix/workflows/Run%20CI/badge.svg
+.. |build-status| image:: https://github.com/maykinmedia/maykin-auth-matrix/workflows/Run%20CI/badge.svg
     :alt: Build status
-    :target: https://github.com/maykinmedia/auth_matrix/actions?query=workflow%3A%22Run+CI%22
+    :target: https://github.com/maykinmedia/maykin-auth-matrix/actions?query=workflow%3A%22Run+CI%22
 
-.. |code-quality| image:: https://github.com/maykinmedia/auth_matrix/workflows/Code%20quality%20checks/badge.svg
+.. |code-quality| image:: https://github.com/maykinmedia/maykin-auth-matrix/workflows/Code%20quality%20checks/badge.svg
      :alt: Code quality checks
-     :target: https://github.com/maykinmedia/auth_matrix/actions?query=workflow%3A%22Code+quality+checks%22
+     :target: https://github.com/maykinmedia/maykin-auth-matrix/actions?query=workflow%3A%22Code+quality+checks%22
 
 .. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
 
-.. |coverage| image:: https://codecov.io/gh/maykinmedia/auth_matrix/branch/main/graph/badge.svg
-    :target: https://codecov.io/gh/maykinmedia/auth_matrix
+.. |coverage| image:: https://codecov.io/gh/maykinmedia/maykin-auth-matrix/branch/main/graph/badge.svg
+    :target: https://codecov.io/gh/maykinmedia/maykin-auth-matrix
     :alt: Coverage status
 
-.. |docs| image:: https://readthedocs.org/projects/auth_matrix/badge/?version=latest
-    :target: https://auth_matrix.readthedocs.io/en/latest/?badge=latest
+.. |docs| image:: https://readthedocs.org/projects/maykin-auth-matrix/badge/?version=latest
+    :target: https://maykin-auth-matrix.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. |python-versions| image:: https://img.shields.io/pypi/pyversions/auth_matrix.svg
+.. |python-versions| image:: https://img.shields.io/pypi/pyversions/maykin-auth-matrix.svg
 
-.. |django-versions| image:: https://img.shields.io/pypi/djversions/auth_matrix.svg
+.. |django-versions| image:: https://img.shields.io/pypi/djversions/maykin-auth-matrix.svg
 
-.. |pypi-version| image:: https://img.shields.io/pypi/v/auth_matrix.svg
-    :target: https://pypi.org/project/auth_matrix/
+.. |pypi-version| image:: https://img.shields.io/pypi/v/maykin-auth-matrix.svg
+    :target: https://pypi.org/project/maykin-auth-matrix/

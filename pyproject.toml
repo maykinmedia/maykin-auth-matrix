@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "auth_matrix"
+name = "maykin-auth-matrix"
 version = "0.1.0"
 description = "TODO"
 authors = [
@@ -32,10 +32,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/maykinmedia/auth_matrix"
-Documentation = "http://auth_matrix.readthedocs.io/en/latest/"
-"Bug Tracker" = "https://github.com/maykinmedia/auth_matrix/issues"
-"Source Code" = "https://github.com/maykinmedia/auth_matrix"
+Homepage = "https://github.com/maykinmedia/maykin-auth-matrix"
+Documentation = "http://maykin-auth-matrix.readthedocs.io/en/latest/"
+"Bug Tracker" = "https://github.com/maykinmedia/maykin-auth-matrix/issues"
+"Source Code" = "https://github.com/maykinmedia/maykin-auth-matrix"
 
 [project.optional-dependencies]
 tests = [
@@ -56,7 +56,7 @@ release = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["auth_matrix*"]
+include = ["maykin-auth-matrix*"]
 namespaces = true
 
 [tool.isort]
@@ -64,7 +64,7 @@ profile = "black"
 combine_as_imports = true
 skip = ["env", ".tox", ".history", ".eggs"]
 known_django = "django"
-known_first_party="auth_matrix"
+known_first_party="maykin-auth-matrix"
 sections=["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
 
 [tool.pytest.ini_options]
@@ -81,7 +81,7 @@ files = [
 
 [tool.coverage.run]
 branch = true
-source = ["auth_matrix"]
+source = ["maykin-auth-matrix"]
 omit = [
     # migrations run while django initializes the test db
     "*/migrations/*",
