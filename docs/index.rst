@@ -23,7 +23,8 @@ Features
    :caption: Contents:
 
    quickstart
-
+   contributing
+   changelog
 
 
 Indices and tables
