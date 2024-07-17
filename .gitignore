@@ -46,6 +46,8 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
+pytest.ini
+reports/*
 
 # Translations
 *.mo
@@ -55,6 +57,7 @@ coverage.xml
 *.log
 local_settings.py
 db.sqlite3
+testapp/auth_matrix.db
 
 # Flask stuff:
 instance/
@@ -102,3 +105,5 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+testapp/auth_matrix.db

@@ -1,16 +1,27 @@
 from django import views
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import Group, Permission
-from django.utils.decorators import method_decorator
 
 User = get_user_model()
 
 
-@method_decorator(staff_member_required, name="dispatch")
-class AuthorizationMatrixView(views.generic.base.TemplateView):
+class UserIsStaffMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
 
-    template_name = "admin/authorization/authorization_matrix.html"
+
+def get_auth_matrix_permission():
+    if User._meta.app_label == "auth":
+        return "auth.view_user"
+    return "accounts.view_user"
+
+
+class AuthorizationMatrixView(
+    UserIsStaffMixin, PermissionRequiredMixin, views.generic.base.TemplateView
+):
+    permission_required = get_auth_matrix_permission()
+    template_name = "admin/auth_matrix/authorization_matrix.html"
 
     def get(self, request):
         groups = Group.objects.prefetch_related("permissions").order_by("name")

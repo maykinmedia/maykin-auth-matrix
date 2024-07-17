@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
+from django.contrib.postgres.aggregates import ArrayAgg
+from django.db.models import OuterRef, Subquery
 
 from import_export import fields, resources
 from import_export.admin import ExportMixin
@@ -43,21 +45,22 @@ class UserGroupResource(resources.ModelResource):
         return data
 
     def export(self, queryset, *args, **kwargs):
-        queryset = self.get_queryset()
-        dataset = super().export(queryset, *args, **kwargs)
-        group_names = [group.name for group in Group.objects.all()]
-        for group_name in group_names:
-            dataset.append_col(
-                [
-                    user.groups.filter(name=group_name).exists()
-                    for user in User.objects.all()
-                ],
-                header=group_name,
-            )
-        return dataset
+        group_names_subquery = (
+            Group.objects.filter(user=OuterRef("pk"))
+            .values("user")
+            .annotate(group_names=ArrayAgg("name"))
+            .values("group_names")
+        )
+        queryset = super().get_queryset()  # Else the exported CSV user values are blank
+        queryset = queryset.annotate(group_names=Subquery(group_names_subquery))
 
-    def get_queryset(self):
-        return super().get_queryset()
+        dataset = super().export(queryset, *args, **kwargs)
+
+        for group_name in Group.objects.values_list("name", flat=True).order_by("name"):
+            column = [group_name in (user.group_names or []) for user in queryset]
+            dataset.append_col(column, header=group_name)
+
+        return dataset
 
 
 # GROUPS

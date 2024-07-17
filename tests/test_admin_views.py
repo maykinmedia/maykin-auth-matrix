@@ -1,74 +1,67 @@
 from django.contrib.auth import get_user_model
-from django.test import RequestFactory, TestCase
 from django.urls import reverse
+
+import pytest
 
 from auth_matrix.admin_views import AuthorizationMatrixView
 
 User = get_user_model()
 
 
-class AuthorizationMatrixViewTest(TestCase):
-    def setUp(self):
-        self.factory = RequestFactory()
-        self.view = AuthorizationMatrixView.as_view()
-        self.admin_user = User.objects.create_user(
-            username="test", password="test", is_staff=True, is_superuser=True
-        )
-        self.url = reverse("authorization_matrix")
+@pytest.fixture
+def url():
+    return reverse("auth_matrix:authorization_matrix")
 
-    def test_view_requires_admin_permission(self):
-        request = self.factory.get(self.url)
-        request.user = User.objects.create_user(
-            username="test_user",
-            password="test_pass",
-            is_staff=False,
-            is_superuser=False,
-        )
 
-        response = self.view(request)
+@pytest.fixture
+def view():
+    return AuthorizationMatrixView.as_view()
 
-        self.assertEqual(response.status_code, 302)
 
-    def test_view_returns_200_for_admin_user(self):
-        request = self.factory.get(self.url)
-        request.user = self.admin_user
+@pytest.mark.django_db
+def test_view_requires_admin_permission(client, url):
+    # Create a non-admin user and log in
+    user = User.objects.create_user(
+        username="test_user", password="test_pass", is_staff=False, is_superuser=False
+    )
+    client.force_login(user)
 
-        response = self.view(request)
+    response = client.get(url)
 
-        self.assertEqual(response.status_code, 200)
+    # Expecting redirect to login since PermissionDenied should lead to a
+    # redirect to login page when using client
+    assert response.status_code == 302
 
-    def test_view_uses_correct_template(self):
-        request = self.factory.get(self.url)
-        request.user = self.admin_user
 
-        response = self.view(request)
+def test_view_returns_200_for_admin_user(admin_client, url):
+    response = admin_client.get(url)
 
-        self.assertEqual(
-            response.template_name, ["admin/authorization/authorization_matrix.html"]
-        )
+    assert response.status_code == 200
 
-    def test_view_context_contains_groups(self):
-        request = self.factory.get(self.url)
-        request.user = self.admin_user
 
-        response = self.view(request)
+def test_view_uses_correct_template(admin_client, url):
+    response = admin_client.get(url)
 
-        self.assertIn("groups", response.context_data)
+    assert "admin/auth_matrix/authorization_matrix.html" in [
+        t.name for t in response.templates
+    ]
 
-    def test_view_context_contains_user_group_matrix(self):
-        request = self.factory.get(self.url)
-        request.user = self.admin_user
 
-        response = self.view(request)
+def test_view_context_contains_groups(admin_client, url):
+    response = admin_client.get(url)
 
-        self.assertIn("user_group_matrix", response.context_data)
-        self.assertIsInstance(response.context_data["user_group_matrix"], list)
+    assert "groups" in response.context
 
-    def test_view_context_contains_group_permission_matrix(self):
-        request = self.factory.get(self.url)
-        request.user = self.admin_user
 
-        response = self.view(request)
+def test_view_context_contains_user_group_matrix(admin_client, url):
+    response = admin_client.get(url)
 
-        self.assertIn("group_permission_matrix", response.context_data)
-        self.assertIsInstance(response.context_data["group_permission_matrix"], list)
+    assert "user_group_matrix" in response.context
+    assert isinstance(response.context["user_group_matrix"], list)
+
+
+def test_view_context_contains_group_permission_matrix(admin_client, url):
+    response = admin_client.get(url)
+
+    assert "group_permission_matrix" in response.context
+    assert isinstance(response.context["group_permission_matrix"], list)

@@ -1,0 +1,10 @@
+{% load i18n %}
+{% if request.user.is_staff %}
+    {% if perms.auth.view_user or perms.accounts.view_user %}
+        <li>
+            <a href="{% url 'auth_matrix:authorization_matrix' %}" class="button mt">
+                {% trans "Show the authorization matrix" %}
+            </a>
+        </li>
+    {% endif %}
+{% endif %}

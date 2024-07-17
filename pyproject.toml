@@ -29,6 +29,8 @@ requires-python = ">=3.10"
 dependencies = [
     "django>=4.2",
     "django-import-export",
+    "psycopg2",
+    "python-dotenv",
 ]
 
 [project.urls]

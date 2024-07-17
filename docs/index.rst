@@ -3,19 +3,22 @@
    contain the root `toctree` directive.
 
 Welcome to maykin-auth-matrix's documentation!
-=================================================
+==============================================
 
 |build-status| |code-quality| |black| |coverage| |docs|
 
 |python-versions| |django-versions| |pypi-version|
 
-DigiD Compliant Authorization Matrix for the administation of Django projects.
+Generate and export an authorization matrix of Django (staff) users.
+
+DigiD audit requirements require insight in user authorizations, provided 
+through these matrices.
 
 Features
 ========
 
-* Display a matrix of permissions for the groups
-* Display a matrix of groups for the users
+* Generate a matrix of permissions for the groups
+* Generate a matrix of groups for the users
 * Allows to export the matrix in different formats
 
 .. toctree::
