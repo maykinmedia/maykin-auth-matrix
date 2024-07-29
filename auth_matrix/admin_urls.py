@@ -3,6 +3,8 @@ from django.urls import path
 
 from .admin_views import AuthorizationMatrixView
 
+app_name = "auth_matrix"
+
 urlpatterns = [
     path(
         "matrix",

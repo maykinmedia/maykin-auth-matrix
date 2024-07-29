@@ -40,16 +40,60 @@ Installation
    .. code-block:: python
 
       from django.contrib import admin
-      from django.urls import path, include
-
-      from auth_matrix.views import AuthMatrixView
+      from django.urls import include, path
 
       urlpatterns = [
-          path(
-              "admin/auth_matrix/",
-              include(("auth_matrix.admin_urls", "auth_matrix"), namespace="auth_matrix"),
-          ),
+          path("admin/auth_matrix/", include(("auth_matrix.admin_urls"))),
+          ...
       ]
+
+5. Add the ``UserExportMixin`` to your ``ModelAdmin`` to enable the export functionality:
+
+   .. code-block:: python
+
+      from auth_matrix.admin import UserExportMixin
+
+      class CustomUserAdmin(UserExportMixin, admin.ModelAdmin):
+          ...
+
+6. Add the GroupExportMixin to your ModelAdmin to enable the export functionality:
+
+   .. code-block:: python
+
+      from auth_matrix.admin import GroupExportMixin
+
+      class CustomGroupAdmin(GroupExportMixin, admin.ModelAdmin):
+          ...
+
+7. Add the context processor to your Django project's settings.py:
+
+   .. code-block:: python
+
+      TEMPLATES = [
+        {
+            "OPTIONS": {
+                "context_processors": [
+                    ...
+                    "auth_matrix.context_processors.auth_matrix_permission",
+                    ...
+                ],
+            },
+        },
+      ]
+
+8. If you override the default User or Group model, you can add this template 
+   to your template model's folder (e.g. ``templates/admin/accounts/user/change_list.html``):
+
+   .. code-block:: django
+
+      {% extends "admin/change_list.html" %}
+
+      {% load admin_list i18n %}
+
+      {% block object-tools-items %}
+          {% include "auth_matrix/admin/includes/object_tools_items.html" %}
+          {{ block.super }}
+      {% endblock %}
 
 Usage
 =====
@@ -61,7 +105,7 @@ To use this with your project you need to follow these steps:
 .. image:: images/authorization_matrix.png
     :alt: Authorization Matrix
 
-Navigate to the Groups admin page and click on the "Authorization Matrix" link
+Navigate to the Groups or User admin page and click on the "Authorization Matrix" link
 to view the matrix.
 
 .. image:: images/authorization_button.png
@@ -77,9 +121,4 @@ Click the EXPORT button and chose the format you want to export the matrix to.
 .. image:: images/export_matrix.png
     :alt: Export Authorization Matrix Button 
 
-You can pick between two resources:
-    - UserGroupResource : exports the matrix with users as rows and groups as columns
-    - GroupPermissionsResource : exports the matrix with permissions as rows and groups as columns
 
-.. image:: images/export_matrix_format.png
-    :alt: Export Authorization Matrix Formats

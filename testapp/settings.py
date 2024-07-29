@@ -1,10 +1,6 @@
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()  # take environment variables from .env.
-
 DEBUG = True
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent
@@ -20,7 +16,7 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT", "5432"),
         "NAME": os.getenv("DB_NAME", "auth_matrix"),
         "USER": os.getenv("DB_USER", "postgres"),
-        "PASSWORD": os.getenv("DB_PASSWORD", ""),
+        "PASSWORD": os.getenv("DB_PASSWORD", "postgres"),
     },
 }
 
@@ -56,9 +52,12 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "auth_matrix.context_processors.auth_matrix_permission",
             ],
         },
     },
 ]
 
 ROOT_URLCONF = "testapp.urls"
+
+STATIC_URL = "/static/"

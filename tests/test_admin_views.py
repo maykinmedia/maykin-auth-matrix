@@ -42,7 +42,7 @@ def test_view_returns_200_for_admin_user(admin_client, url):
 def test_view_uses_correct_template(admin_client, url):
     response = admin_client.get(url)
 
-    assert "admin/auth_matrix/authorization_matrix.html" in [
+    assert "auth_matrix/admin/authorization_matrix.html" in [
         t.name for t in response.templates
     ]
 

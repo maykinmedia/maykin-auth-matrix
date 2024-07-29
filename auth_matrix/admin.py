@@ -1,8 +1,7 @@
-from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models import OuterRef, Subquery
+from django.db.models import OuterRef, Subquery, Value
 
 from import_export import fields, resources
 from import_export.admin import ExportMixin
@@ -37,30 +36,23 @@ class UserGroupResource(resources.ModelResource):
         )
         export_order = fields
 
-    def dehydrate(self, user):
-        data = super().dehydrate(user)
-        group_names = [group.name for group in Group.objects.all()]
-        for group_name in group_names:
-            data[group_name] = group_name in [group.name for group in user.groups.all()]
-        return data
-
-    def export(self, queryset, *args, **kwargs):
+    def after_export(self, queryset, data, *args, **kwargs):
         group_names_subquery = (
             Group.objects.filter(user=OuterRef("pk"))
             .values("user")
-            .annotate(group_names=ArrayAgg("name"))
+            .annotate(group_names=ArrayAgg("name"), default=Value([]))
             .values("group_names")
         )
-        queryset = super().get_queryset()  # Else the exported CSV user values are blank
         queryset = queryset.annotate(group_names=Subquery(group_names_subquery))
-
-        dataset = super().export(queryset, *args, **kwargs)
-
         for group_name in Group.objects.values_list("name", flat=True).order_by("name"):
             column = [group_name in (user.group_names or []) for user in queryset]
-            dataset.append_col(column, header=group_name)
+            data.append_col(column, header=group_name)
+        return data
 
-        return dataset
+
+class UserExportMixin(ExportMixin):
+    resource_classes = (UserGroupResource,)
+    change_list_template = "admin/auth/user/change_list.html"
 
 
 # GROUPS
@@ -74,38 +66,24 @@ class GroupPermissionResource(resources.ModelResource):
         fields = ("name",)
         export_order = fields
 
-    def dehydrate(self, group):
-        data = super().dehydrate(group)
+    def after_export(self, queryset, data, *args, **kwargs):
         permission_names = [permission.name for permission in Permission.objects.all()]
         for permission_name in permission_names:
-            data[permission_name] = permission_name in [
-                permission.name for permission in group.permissions.all()
-            ]
-        return data
-
-    def export(self, queryset, *args, **kwargs):
-        dataset = super().export(queryset, *args, **kwargs)
-        permission_names = [permission.name for permission in Permission.objects.all()]
-        for permission_name in permission_names:
-            dataset.append_col(
+            data.append_col(
                 [
                     group.permissions.filter(name=permission_name).exists()
                     for group in queryset
                 ],
                 header=permission_name,
             )
-        # Transpose the dataset
-        dataset = dataset.transpose()
+        dataset = data.transpose()
         # Rename the first column to "Groep"
         dataset.headers[0] = "Groep"
         return dataset
 
 
-class CustomGroupAdmin(ExportMixin, admin.ModelAdmin):
-    resource_classes = (UserGroupResource, GroupPermissionResource)
-    search_fields = ("name",)
-    ordering = ("name",)
-    filter_horizontal = ("permissions",)
+class GroupExportMixin(ExportMixin):
+    resource_classes = (GroupPermissionResource,)
     change_list_template = "admin/auth/group/change_list.html"
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
@@ -115,7 +93,3 @@ class CustomGroupAdmin(ExportMixin, admin.ModelAdmin):
             # triggers a content_type load:
             kwargs["queryset"] = qs.select_related("content_type")
         return super().formfield_for_manytomany(db_field, request=request, **kwargs)
-
-
-admin.site.unregister(Group)
-admin.site.register(Group, CustomGroupAdmin)
