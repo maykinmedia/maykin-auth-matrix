@@ -14,7 +14,7 @@ username_attribute = getattr(User, "USERNAME_FIELD", "username")
 email_attribute = getattr(User, "EMAIL_FIELD", "email")
 
 
-class UserGroupResource(resources.ModelResource):
+class UserWithGroupsResource(resources.ModelResource):
     username = fields.Field(attribute=username_attribute, column_name="Username")
     email = fields.Field(attribute=email_attribute, column_name="E-mail")
     last_login = fields.Field(attribute="last_login", column_name="Laatst gewijzigd")
@@ -51,7 +51,7 @@ class UserGroupResource(resources.ModelResource):
 
 
 class UserExportMixin(ExportMixin):
-    resource_classes = (UserGroupResource,)
+    resource_classes = (UserWithGroupsResource,)
     change_list_template = "admin/auth/user/change_list.html"
 
 
@@ -67,11 +67,30 @@ class GroupPermissionResource(resources.ModelResource):
         export_order = fields
 
     def after_export(self, queryset, data, *args, **kwargs):
-        permission_names = [permission.name for permission in Permission.objects.all()]
+        # Get all permissions with their content type and codename
+        # Permissions names aint unique, so we need to include the content type
+        # and the model to make them unique
+        permissions = Permission.objects.prefetch_related("content_type").values(
+            "content_type__app_label", "content_type__model", "codename"
+        )
+
+        # Create a list of formatted permission names
+        permission_names = [
+            f"{perm['content_type__app_label']}:"
+            f"{perm['content_type__model']}:{perm['codename']}"
+            for perm in permissions
+        ]
+
+        # Iterate over the formatted permission names
         for permission_name in permission_names:
+            app_label, model, codename = permission_name.split(":")
             data.append_col(
                 [
-                    group.permissions.filter(name=permission_name).exists()
+                    group.permissions.filter(
+                        content_type__app_label=app_label,
+                        content_type__model=model,
+                        codename=codename,
+                    ).exists()
                     for group in queryset
                 ],
                 header=permission_name,

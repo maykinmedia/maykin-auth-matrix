@@ -1,11 +1,7 @@
-from typing import Any
-
-from django import views
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import Group, Permission
-from django.http import HttpRequest
-from django.http.response import HttpResponse
+from django.views.generic import TemplateView
 
 User = get_user_model()
 
@@ -20,16 +16,16 @@ def get_auth_matrix_permission_label():
     return f"{opts.app_label}.view_{opts.model_name}"
 
 
-class CanViewAuthorizationMatrixMixin(UserIsStaffMixin):
-    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if not request.user.has_perm(get_auth_matrix_permission_label()):
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
+class CanViewAuthorizationMatrixMixin(UserIsStaffMixin, PermissionRequiredMixin):
+
+    def get_permission_required(self):
+        permission_required = get_auth_matrix_permission_label()
+        return (permission_required,)
 
 
 class AuthorizationMatrixView(
     CanViewAuthorizationMatrixMixin,
-    views.generic.base.TemplateView,
+    TemplateView,
 ):
     template_name = "auth_matrix/admin/authorization_matrix.html"
 
