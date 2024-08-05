@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if can_view_auth_matrix %}
+    <li>
+        <a href="{% url 'auth_matrix:authorization_matrix' %}" class="button mt">
+            {% trans "Show the authorization matrix" %}
+        </a>
+    </li>
+{% endif %}
