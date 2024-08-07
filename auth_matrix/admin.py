@@ -1,10 +1,14 @@
+from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.contrib.postgres.aggregates import ArrayAgg
+from django.db import models
 from django.db.models import OuterRef, Subquery, Value
 
 from import_export import fields, resources
 from import_export.admin import ExportMixin
+
+from auth_matrix.admin_views import AuthorizationMatrixView
 
 # USERS
 
@@ -112,3 +116,28 @@ class GroupExportMixin(ExportMixin):
             # triggers a content_type load:
             kwargs["queryset"] = qs.select_related("content_type")
         return super().formfield_for_manytomany(db_field, request=request, **kwargs)
+
+
+class DummyModel(models.Model):
+    pass
+
+    class Meta:
+        managed = False
+
+
+class DummyModelAdmin(admin.ModelAdmin):
+    pass
+
+    def get_urls(self):
+        from django.urls import path
+
+        return [
+            path(
+                "matrix/",
+                self.admin_site.admin_view(AuthorizationMatrixView.as_view()),
+                name="authorization_matrix",
+            )
+        ]
+
+
+admin.site.register(DummyModel, DummyModelAdmin)

@@ -35,19 +35,7 @@ Installation
 
 3. Run ``python manage.py migrate`` to create the necessary database tables.
 
-4. Add the URL to your Django project's ``urls.py``:
-
-   .. code-block:: python
-
-      from django.contrib import admin
-      from django.urls import include, path
-
-      urlpatterns = [
-          path("admin/auth_matrix/", include(("auth_matrix.admin_urls"))),
-          ...
-      ]
-
-5. Add the ``UserExportMixin`` to your ``ModelAdmin`` to enable the export functionality:
+4. Add the ``UserExportMixin`` to your ``ModelAdmin`` to enable the export functionality:
 
    .. code-block:: python
 
@@ -56,7 +44,7 @@ Installation
       class CustomUserAdmin(UserExportMixin, admin.ModelAdmin):
           ...
 
-6. Add the GroupExportMixin to your ModelAdmin to enable the export functionality:
+5. Add the GroupExportMixin to your ModelAdmin to enable the export functionality:
 
    .. code-block:: python
 
@@ -65,7 +53,7 @@ Installation
       class CustomGroupAdmin(GroupExportMixin, admin.ModelAdmin):
           ...
 
-7. Add the context processor to your Django project's settings.py:
+6. Add the context processor to your Django project's settings.py:
 
    .. code-block:: python
 
@@ -81,7 +69,7 @@ Installation
         },
       ]
 
-8. Override the default User or Group template, you can add this template 
+7. Override the default User or Group template, you can add this template 
    to your template model's folder (e.g. ``templates/admin/accounts/user/change_list.html``):
 
    .. code-block:: django
