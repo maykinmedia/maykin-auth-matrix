@@ -83,6 +83,15 @@ Installation
           {{ block.super }}
       {% endblock %}
 
+9. Config the template location in the mixin with the matching template.
+   There is a default template location for the User and Group admin pages.
+
+   .. code-block:: python 
+   
+      class GroupExportMixin(ExportMixin):
+          resource_classes = (GroupPermissionResource,)
+          change_list_template = "admin/auth/group/change_list.html"
+
 Usage
 =====
 
