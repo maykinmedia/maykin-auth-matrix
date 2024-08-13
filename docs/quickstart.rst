@@ -2,17 +2,120 @@
 Quickstart
 ==========
 
+Requirements
+============
+
+This application makes use of the AbstractBaseUser model from django.
+Generally, you should be able to use this application with any Django project 
+that uses the default User model.
+If you are using a custom User model, you will need to make sure that it is 
+compatible with the AbstractBaseUser model.
+Otherwise you can customize things through the username and email properties on 
+your custom user model.
+
 Installation
 ============
 
-Install from PyPI with pip:
+1. Install from PyPI with pip:
 
-.. code-block:: bash
+   .. code-block:: bash
 
-    pip install auth_matrix
+      pip install maykin-auth-matrix
 
+2. Add ``maykin-auth-matrix`` to ``INSTALLED_APPS`` in
+   your Django project's ``settings.py``:
+
+   .. code-block:: python
+
+      INSTALLED_APPS = (
+          "django.contrib.admin",
+          ...,
+          "auth_matrix",
+      )
+
+3. Run ``python manage.py migrate`` to create the necessary database tables.
+
+4. Add the ``UserExportMixin`` to your ``ModelAdmin`` to enable the export functionality:
+
+   .. code-block:: python
+
+      from auth_matrix.admin import UserExportMixin
+
+      class CustomUserAdmin(UserExportMixin, admin.ModelAdmin):
+          ...
+
+5. Add the GroupExportMixin to your ModelAdmin to enable the export functionality:
+
+   .. code-block:: python
+
+      from auth_matrix.admin import GroupExportMixin
+
+      class CustomGroupAdmin(GroupExportMixin, admin.ModelAdmin):
+          ...
+
+6. Add the context processor to your Django project's settings.py:
+
+   .. code-block:: python
+
+      TEMPLATES = [
+        {
+            "OPTIONS": {
+                "context_processors": [
+                    ...
+                    "auth_matrix.context_processors.auth_matrix_permission",
+                    ...
+                ],
+            },
+        },
+      ]
+
+7. Override the default User or Group template, you can add this template 
+   to your template model's folder (e.g. ``templates/admin/accounts/user/change_list.html``):
+
+   .. code-block:: django
+
+      {% extends "admin/change_list.html" %}
+
+      {% load admin_list i18n %}
+
+      {% block object-tools-items %}
+          {% include "auth_matrix/admin/includes/object_tools_items.html" %}
+          {{ block.super }}
+      {% endblock %}
+
+9. Config the template location in the mixin with the matching template.
+   There is a default template location for the User and Group admin pages.
+
+   .. code-block:: python 
+   
+      class GroupExportMixin(ExportMixin):
+          resource_classes = (GroupPermissionResource,)
+          change_list_template = "admin/auth/group/change_list.html"
 
 Usage
 =====
 
-<document how to use the app here>
+To use this with your project you need to follow these steps:
+
+#. Display the Authorization Matrix
+
+.. image:: images/authorization_matrix.png
+    :alt: Authorization Matrix
+
+Navigate to the Groups or User admin page and click on the "Authorization Matrix" link
+to view the matrix.
+
+.. image:: images/authorization_button.png
+    :alt: Show Authorization Matrix Button
+
+#. Export the Authorization Matrix
+
+On the top right corner of the Groups admin page, you can choose to export the
+matrix to different formats.
+
+Click the EXPORT button and chose the format you want to export the matrix to.
+
+.. image:: images/export_matrix.png
+    :alt: Export Authorization Matrix Button 
+
+
