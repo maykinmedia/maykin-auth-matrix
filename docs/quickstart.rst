@@ -81,7 +81,7 @@ Installation
         },
       ]
 
-8. If you override the default User or Group model, you can add this template 
+8. Override the default User or Group template, you can add this template 
    to your template model's folder (e.g. ``templates/admin/accounts/user/change_list.html``):
 
    .. code-block:: django
