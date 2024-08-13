@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models import OuterRef, Subquery, Value
 
+from auth_matrix.admin_views import AuthorizationMatrixView
 from import_export import fields, resources
 from import_export.admin import ExportMixin
 
@@ -54,6 +55,19 @@ class UserExportMixin(ExportMixin):
     resource_classes = (UserWithGroupsResource,)
     change_list_template = "admin/auth/user/change_list.html"
 
+    def get_urls(self):
+        from django.urls import path
+
+        current_urls = super().get_urls()
+        to_add = [
+            path(
+                "matrix/",
+                self.admin_site.admin_view(AuthorizationMatrixView.as_view()),
+                name="authorization_matrix",
+            )
+        ]
+
+        return to_add + current_urls
 
 # GROUPS
 
@@ -104,6 +118,20 @@ class GroupPermissionResource(resources.ModelResource):
 class GroupExportMixin(ExportMixin):
     resource_classes = (GroupPermissionResource,)
     change_list_template = "admin/auth/group/change_list.html"
+
+    def get_urls(self):
+        from django.urls import path
+
+        current_urls = super().get_urls()
+        to_add = [
+            path(
+                "matrix/",
+                self.admin_site.admin_view(AuthorizationMatrixView.as_view()),
+                name="authorization_matrix",
+            )
+        ]
+
+        return to_add + current_urls
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         if db_field.name == "permissions":

@@ -10,7 +10,7 @@ User = get_user_model()
 
 @pytest.fixture
 def url():
-    return reverse("auth_matrix:authorization_matrix")
+    return reverse("admin:authorization_matrix")
 
 
 @pytest.fixture
