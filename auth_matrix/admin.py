@@ -3,9 +3,10 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models import OuterRef, Subquery, Value
 
-from auth_matrix.admin_views import AuthorizationMatrixView
 from import_export import fields, resources
 from import_export.admin import ExportMixin
+
+from auth_matrix.admin_views import AuthorizationMatrixView
 
 # USERS
 
@@ -68,6 +69,7 @@ class UserExportMixin(ExportMixin):
         ]
 
         return to_add + current_urls
+
 
 # GROUPS
 
